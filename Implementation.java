@@ -4,9 +4,14 @@ import java.util.Scanner;
 
 public class Implementation {
     public static void main(String[] args) {
-        InventoryService manager = new Inventory();
+        Inventory manager = new Inventory();
         Scanner scanner = new Scanner(System.in);
         System.out.println("Welcome to Inventory Management System!");
+        
+        // Add shutdown hook to close database on unexpected exit
+        Runtime.getRuntime().addShutdownHook(new Thread(() -> {
+            manager.closeDatabase();
+        }));
         while(true) {
             System.out.println("\n-----Inventory Management System-----");
             System.out.println("1. Add New Product");
@@ -92,6 +97,7 @@ public class Implementation {
                     break;
                 case 6:
                     System.out.println("Exiting...");
+                    manager.closeDatabase();
                     scanner.close();
                     System.exit(0);
                 default:
